@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import https from "https";
+import fetch from "node-fetch";
 
 type Data = {
 	success: boolean;
