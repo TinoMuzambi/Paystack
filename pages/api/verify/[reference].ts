@@ -9,13 +9,12 @@ type Data = {
 export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	const {
 		query: { reference },
-		method,
 	} = req;
 
 	const options = {
 		hostname: "api.paystack.co",
 		port: 443,
-		path: `/transaction/verify/${reference}`,
+		path: `/transaction/verify/:${reference}`,
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${process.env.PAYSTACK_SECRET_TEST_KEY}`,
