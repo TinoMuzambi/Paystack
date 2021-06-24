@@ -1,6 +1,15 @@
 import { usePaystackPayment } from "react-paystack";
 import { PaystackProps } from "react-paystack/dist/types";
 
+type referenceObj = {
+	message: string;
+	reference: string;
+	status: "sucess" | "failure";
+	trans: string;
+	transaction: string;
+	trxref: string;
+};
+
 export default function Home() {
 	const config: PaystackProps = {
 		reference: new Date().getTime().toString(),
@@ -12,8 +21,9 @@ export default function Home() {
 	};
 
 	// you can call this function anything
-	const onSuccess: Function = (reference: string) => {
+	const onSuccess: Function = async (reference: referenceObj) => {
 		// Implementation for whatever you want to do with reference and after success call.
+		await fetch(`/api/verify/${reference.reference}`);
 		console.log(reference);
 	};
 
