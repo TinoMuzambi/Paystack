@@ -15,7 +15,7 @@ export default function Home() {
 		email: "user@example.com",
 		label: "Tino",
 		amount: 20000,
-		publicKey: process.env.PAYSTACK_PUBLIC_KEY as string,
+		publicKey: process.env.PAYSTACK_PUBLIC_TEST_KEY as string,
 		currency: "ZAR",
 	};
 

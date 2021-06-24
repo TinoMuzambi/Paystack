@@ -18,7 +18,7 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		path: `/transaction/verify/${reference}`,
 		method: "GET",
 		headers: {
-			Authorization: "Bearer SECRET_KEY",
+			Authorization: `Bearer ${process.env.PAYSTACK_SECRET_TEST_KEY}`,
 		},
 	};
 	try {
