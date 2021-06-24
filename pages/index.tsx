@@ -3,7 +3,7 @@ import { PaystackProps } from "react-paystack/dist/types";
 
 export default function Home() {
 	const config: PaystackProps = {
-		reference: new Date().getTime().toLocaleString(),
+		reference: new Date().getTime().toString(),
 		email: "user@example.com",
 		label: "Tino",
 		amount: 20000,
