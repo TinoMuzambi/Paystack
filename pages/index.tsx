@@ -12,6 +12,7 @@ type referenceObj = {
 
 export default function Home() {
 	const config: PaystackProps = {
+		reference: "" + Math.floor(Math.random() * 1000000000 + 1),
 		email: "user@example.com",
 		label: "Tino",
 		amount: 20000,
