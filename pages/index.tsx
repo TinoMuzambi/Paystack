@@ -12,7 +12,6 @@ type referenceObj = {
 
 export default function Home() {
 	const config: PaystackProps = {
-		reference: new Date().getTime().toString(),
 		email: "user@example.com",
 		label: "Tino",
 		amount: 20000,
