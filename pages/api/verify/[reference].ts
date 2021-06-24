@@ -2,7 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import https from "https";
 
 type Data = {
-	name: string;
+	success: boolean;
+	data?: Object;
 };
 
 export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
@@ -11,27 +12,31 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
 		method,
 	} = req;
 
-	// const options = {
-	// 	hostname: "api.paystack.co",
-	// 	port: 443,
-	// 	path: "/transaction/verify/:reference",
-	// 	method: "GET",
-	// 	headers: {
-	// 		Authorization: "Bearer SECRET_KEY",
-	// 	},
-	// };
-	// https
-	// 	.request(options, (res) => {
-	// 		let data = "";
-	// 		res.on("data", (chunk) => {
-	// 			data += chunk;
-	// 		});
-	// 		res.on("end", () => {
-	// 			console.log(JSON.parse(data));
-	// 		});
-	// 	})
-	// 	.on("error", (error) => {
-	// 		console.error(error);
-	// 	});
-	res.status(200).json({ name: reference as string });
+	const options = {
+		hostname: "api.paystack.co",
+		port: 443,
+		path: `/transaction/verify/${reference}`,
+		method: "GET",
+		headers: {
+			Authorization: "Bearer SECRET_KEY",
+		},
+	};
+	try {
+		let data = "";
+		https
+			.request(options, (res) => {
+				res.on("data", (chunk) => {
+					data += chunk;
+				});
+				res.on("end", () => {
+					console.log(JSON.parse(data));
+				});
+			})
+			.on("error", (error) => {
+				console.error(error);
+			});
+		res.status(200).json({ success: true, data: data });
+	} catch (error) {
+		res.status(400).json({ success: false });
+	}
 };
