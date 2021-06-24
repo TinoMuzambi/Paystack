@@ -6,7 +6,7 @@ type Data = {
 	data?: Object;
 };
 
-export default (req: NextApiRequest, resp: NextApiResponse<Data>) => {
+export default async (req: NextApiRequest, resp: NextApiResponse<Data>) => {
 	const {
 		query: { reference },
 	} = req;
@@ -21,22 +21,17 @@ export default (req: NextApiRequest, resp: NextApiResponse<Data>) => {
 		},
 	};
 	try {
-		let data = "";
-		https
-			.request(options, (res) => {
-				res.on("data", (chunk) => {
-					data += chunk;
-					console.log("chunk", JSON.parse(chunk));
-				});
-				res.on("end", () => {
-					console.log("data", JSON.parse(data));
-					resp.status(200).json({ success: true, data: data });
-				});
-			})
-			.on("error", (error) => {
-				console.error("oh no", error);
-				resp.status(400).json({ success: false });
-			});
+		const res = await fetch(
+			`https://api.paystack.co/transaction/verify/${reference}`,
+			{
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${process.env.PAYSTACK_SECRET_TEST_KEY}`,
+				},
+			}
+		);
+		const data = await res.json();
+		resp.status(200).json({ success: true, data: data });
 	} catch (error) {
 		console.error("oh nooo", error);
 		resp.status(400).json({ success: false });
