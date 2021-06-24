@@ -7,7 +7,7 @@ type Data = {
 
 export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	const {
-		query: { ref },
+		query: { reference },
 		method,
 	} = req;
 
@@ -33,5 +33,5 @@ export default (req: NextApiRequest, res: NextApiResponse<Data>) => {
 	// 	.on("error", (error) => {
 	// 		console.error(error);
 	// 	});
-	res.status(200).json({ name: ref as string });
+	res.status(200).json({ name: reference as string });
 };

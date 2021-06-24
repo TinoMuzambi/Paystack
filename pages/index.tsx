@@ -23,8 +23,9 @@ export default function Home() {
 	// you can call this function anything
 	const onSuccess: Function = async (reference: referenceObj) => {
 		// Implementation for whatever you want to do with reference and after success call.
-		await fetch(`/api/verify/${reference.reference}`);
-		console.log(reference);
+		const res = await fetch(`/api/verify/${reference.reference}`);
+		const json = await res.json();
+		console.log(json);
 	};
 
 	// you can call this function anything
