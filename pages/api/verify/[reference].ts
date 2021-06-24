@@ -31,7 +31,7 @@ export default async (req: NextApiRequest, resp: NextApiResponse<Data>) => {
 			}
 		);
 		const data = await res.json();
-		resp.status(200).json({ success: true, data: data });
+		resp.status(200).json({ success: true, data: data.data });
 	} catch (error) {
 		console.error("oh nooo", error);
 		resp.status(400).json({ success: false });
