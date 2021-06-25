@@ -100,9 +100,8 @@ export default function Home() {
 							onChange={(e) => setSurname(e.target.value)}
 						/>
 					</div>
-					<div className="form-submit">
-						<button type="submit">Pay R{amount}</button>
-					</div>
+
+					<button type="submit">Pay R{amount}</button>
 				</form>
 			</main>
 		);
