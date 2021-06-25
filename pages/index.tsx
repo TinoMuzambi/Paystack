@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { usePaystackPayment } from "react-paystack";
 import { PaystackProps } from "react-paystack/dist/types";
 
@@ -11,8 +12,14 @@ type referenceObj = {
 };
 
 export default function Home() {
+	const [ref, setRef] = useState("");
+
+	useEffect(() => {
+		setRef("" + Math.floor(Math.random() * 1000000000 + 1));
+	}, []);
+
 	const config: PaystackProps = {
-		reference: "" + Math.floor(Math.random() * 1000000000 + 1),
+		reference: ref,
 		email: "user@example.com",
 		label: "Tino",
 		amount: 20000,
