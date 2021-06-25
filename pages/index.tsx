@@ -11,7 +11,7 @@ type referenceObj = {
 	trxref: string;
 };
 
-export default function Home() {
+const Home: React.FC = (): JSX.Element => {
 	const [ref, setRef] = useState("");
 	const [email, setEmail] = useState("");
 	const [amount, setAmount] = useState(0);
@@ -61,6 +61,10 @@ export default function Home() {
 		initializePayment(onSuccess, onClose);
 	};
 
+	const PayStackButton: React.FC = (): JSX.Element => (
+		<button type="submit">Pay R{amount}</button>
+	);
+
 	return (
 		<main>
 			<form id="paymentForm" onSubmit={handleSubmit}>
@@ -104,8 +108,10 @@ export default function Home() {
 					/>
 				</div>
 
-				<button type="submit">Pay R{amount}</button>
+				<PayStackButton />
 			</form>
 		</main>
 	);
-}
+};
+
+export default Home;
