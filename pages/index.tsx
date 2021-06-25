@@ -26,9 +26,9 @@ export default function Home() {
 
 	const config: PaystackProps = {
 		reference: ref,
-		email: "user@example.com",
-		label: "Tino",
-		amount: 20000,
+		email: email,
+		label: name + " " + surname,
+		amount: amount * 100,
 		publicKey: process.env.PAYSTACK_PUBLIC_TEST_KEY as string,
 		currency: "ZAR",
 	};
