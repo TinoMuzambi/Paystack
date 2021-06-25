@@ -24,6 +24,10 @@ export default function Home() {
 		setRef("" + Math.floor(Math.random() * 1000000000 + 1));
 	}, [success]);
 
+	useEffect(() => {
+		if (!amount) setAmount(0);
+	}, [amount]);
+
 	const config: PaystackProps = {
 		reference: ref,
 		email: email,
