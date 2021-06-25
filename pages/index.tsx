@@ -69,16 +69,15 @@ export default function Home() {
 						<input type="text" id="last-name" />
 					</div>
 					<div className="form-submit">
-						<button type="submit"> Pay </button>
+						<button
+							onClick={() => {
+								initializePayment(onSuccess, onClose);
+							}}
+						>
+							Paystack Hooks Implementation
+						</button>
 					</div>
 				</form>
-				<button
-					onClick={() => {
-						initializePayment(onSuccess, onClose);
-					}}
-				>
-					Paystack Hooks Implementation
-				</button>
 			</main>
 		);
 	};
