@@ -13,10 +13,10 @@ type referenceObj = {
 
 const Home: React.FC = (): JSX.Element => {
 	const [ref, setRef] = useState("");
-	const [email, setEmail] = useState("");
-	const [amount, setAmount] = useState(0);
-	const [name, setName] = useState("");
-	const [surname, setSurname] = useState("");
+	const [email, setEmail] = useState("tinomuzambi@gmail.com");
+	const [amount, setAmount] = useState(500);
+	const [name, setName] = useState("Tino");
+	const [surname, setSurname] = useState("Muzambi");
 	const [success, setSuccess] = useState(false);
 
 	useEffect(() => {
@@ -31,11 +31,14 @@ const Home: React.FC = (): JSX.Element => {
 	const config: PaystackProps = {
 		reference: ref,
 		email: email,
+		firstname: name,
+		lastname: surname,
 		label: name + " " + surname,
 		amount: amount * 100,
 		publicKey: process.env.PAYSTACK_PUBLIC_TEST_KEY as string,
 		currency: "ZAR",
 	};
+	const initializePayment = usePaystackPayment(config);
 
 	// you can call this function anything
 	const onSuccess: Function = async (reference: referenceObj) => {
@@ -57,13 +60,8 @@ const Home: React.FC = (): JSX.Element => {
 
 	const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
 		e.preventDefault();
-		const initializePayment = usePaystackPayment(config);
 		initializePayment(onSuccess, onClose);
 	};
-
-	const PayStackButton: React.FC = (): JSX.Element => (
-		<button type="submit">Pay R{amount}</button>
-	);
 
 	return (
 		<main>
@@ -108,7 +106,7 @@ const Home: React.FC = (): JSX.Element => {
 					/>
 				</div>
 
-				<PayStackButton />
+				<button type="submit">Pay R{amount}</button>
 			</form>
 		</main>
 	);
