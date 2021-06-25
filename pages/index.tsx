@@ -101,7 +101,7 @@ export default function Home() {
 						/>
 					</div>
 					<div className="form-submit">
-						<button type="submit">Paystack Hooks Implementation</button>
+						<button type="submit">Pay R{amount}</button>
 					</div>
 				</form>
 			</main>
