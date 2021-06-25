@@ -26,6 +26,7 @@ export default function Home() {
 		const res = await fetch(`/api/verify/${reference.reference}`);
 		const json = await res.json();
 		console.log(json);
+		if (json.data.status === "success") alert("All done!");
 	};
 
 	// you can call this function anything
