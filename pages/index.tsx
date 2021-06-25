@@ -74,7 +74,8 @@ export default function Home() {
 					<div className="form-group">
 						<label htmlFor="amount">Amount</label>
 						<input
-							type="tel"
+							type="number"
+							min={0}
 							id="amount"
 							required
 							value={amount}
