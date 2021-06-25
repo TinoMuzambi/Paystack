@@ -7,6 +7,7 @@ body {
 	min-height: 100vh;
 	font-family: "Yanone Kaffeesatz", sans-serif;
 	font-weight: 100;
+	font-size: 20px;
 
 	#paymentForm {
 		display: flex;
@@ -23,6 +24,7 @@ body {
 		button {
 			font-family: inherit;
 			font-weight: inherit;
+			font-size: inherit;
 			outline: none;
 			border: none;
 			padding: 0.5rem 1rem;
