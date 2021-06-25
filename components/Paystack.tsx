@@ -36,21 +36,17 @@ const Paystack: React.FC = (): JSX.Element => {
 	};
 	const initializePayment = usePaystackPayment(config);
 
-	// you can call this function anything
 	const onSuccess: Function = async (reference: referenceObj) => {
-		// Implementation for whatever you want to do with reference and after success call.
 		const res = await fetch(`/api/verify/${reference.reference}`);
-		const json = await res.json();
+		const verifyData = await res.json();
 
-		if (json.data.status === "success") {
+		if (verifyData.data.status === "success") {
 			setSuccess(true);
 			setEmail("");
 		}
 	};
 
-	// you can call this function anything
 	const onClose: Function = () => {
-		// implementation for  whatever you want to do when the Paystack dialog closed.
 		console.log("closed");
 	};
 
