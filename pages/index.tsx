@@ -13,6 +13,10 @@ type referenceObj = {
 
 export default function Home() {
 	const [ref, setRef] = useState("");
+	const [email, setEmail] = useState("");
+	const [amount, setAmount] = useState(0);
+	const [name, setName] = useState("");
+	const [surname, setSurname] = useState("");
 	const [success, setSuccess] = useState(false);
 
 	useEffect(() => {
@@ -59,19 +63,41 @@ export default function Home() {
 				<form id="paymentForm" onSubmit={handleSubmit}>
 					<div className="form-group">
 						<label htmlFor="email">Email Address</label>
-						<input type="email" id="email-address" required />
+						<input
+							type="email"
+							id="email-address"
+							required
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+						/>
 					</div>
 					<div className="form-group">
 						<label htmlFor="amount">Amount</label>
-						<input type="tel" id="amount" required />
+						<input
+							type="tel"
+							id="amount"
+							required
+							value={amount}
+							onChange={(e) => setAmount(Number.parseInt(e.target.value))}
+						/>
 					</div>
 					<div className="form-group">
 						<label htmlFor="first-name">First Name</label>
-						<input type="text" id="first-name" />
+						<input
+							type="text"
+							id="first-name"
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+						/>
 					</div>
 					<div className="form-group">
 						<label htmlFor="last-name">Last Name</label>
-						<input type="text" id="last-name" />
+						<input
+							type="text"
+							id="last-name"
+							value={surname}
+							onChange={(e) => setSurname(e.target.value)}
+						/>
 					</div>
 					<div className="form-submit">
 						<button type="submit">Paystack Hooks Implementation</button>
