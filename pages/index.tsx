@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FormEventHandler, useEffect, useState } from "react";
 import { usePaystackPayment } from "react-paystack";
 import { PaystackProps } from "react-paystack/dist/types";
 
@@ -47,16 +47,16 @@ export default function Home() {
 		console.log("closed");
 	};
 
-	const PaystackHookExample = () => {
+	const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+		e.preventDefault();
 		const initializePayment = usePaystackPayment(config);
+		initializePayment(onSuccess, onClose);
+	};
+
+	const PaystackHookExample = () => {
 		return (
 			<main>
-				<form
-					id="paymentForm"
-					onSubmit={() => {
-						initializePayment(onSuccess, onClose);
-					}}
-				>
+				<form id="paymentForm" onSubmit={handleSubmit}>
 					<div className="form-group">
 						<label htmlFor="email">Email Address</label>
 						<input type="email" id="email-address" required />
