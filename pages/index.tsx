@@ -13,10 +13,10 @@ type referenceObj = {
 
 const Home: React.FC = (): JSX.Element => {
 	const [ref, setRef] = useState("");
-	const [email, setEmail] = useState("tinomuzambi@gmail.com");
-	const [amount, setAmount] = useState(500.54);
-	const [name, setName] = useState("Tino");
-	const [surname, setSurname] = useState("Muzambi");
+	const [email, setEmail] = useState("");
+	const [amount, setAmount] = useState(0);
+	const [name, setName] = useState("");
+	const [surname, setSurname] = useState("");
 	const [success, setSuccess] = useState(false);
 
 	useEffect(() => {
@@ -24,17 +24,13 @@ const Home: React.FC = (): JSX.Element => {
 		setRef("" + Math.floor(Math.random() * 1000000000 + 1));
 	}, [success]);
 
-	useEffect(() => {
-		if (!amount) setAmount(0);
-	}, [amount]);
-
 	const config: PaystackProps = {
 		reference: ref,
 		email: email,
 		firstname: name,
 		lastname: surname,
 		label: name + " " + surname,
-		amount: amount * 100,
+		amount: (amount * 100) | 0,
 		publicKey: process.env.PAYSTACK_PUBLIC_TEST_KEY as string,
 		currency: "ZAR",
 	};
@@ -107,7 +103,7 @@ const Home: React.FC = (): JSX.Element => {
 					/>
 				</div>
 
-				<button type="submit">Pay R{amount}</button>
+				<button type="submit">Pay R{amount | 0}</button>
 			</form>
 		</main>
 	);
