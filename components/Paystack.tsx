@@ -43,11 +43,14 @@ const Paystack: React.FC = (): JSX.Element => {
 		if (verifyData.data.status === "success") {
 			setSuccess(true);
 			setEmail("");
+			setAmount(0);
+			setName("");
+			setSurname("");
 		}
 	};
 
 	const onClose: Function = () => {
-		console.log("closed");
+		alert("Payment cancelled.");
 	};
 
 	const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
