@@ -14,7 +14,7 @@ type referenceObj = {
 const Home: React.FC = (): JSX.Element => {
 	const [ref, setRef] = useState("");
 	const [email, setEmail] = useState("tinomuzambi@gmail.com");
-	const [amount, setAmount] = useState(500);
+	const [amount, setAmount] = useState(500.54);
 	const [name, setName] = useState("Tino");
 	const [surname, setSurname] = useState("Muzambi");
 	const [success, setSuccess] = useState(false);
@@ -48,7 +48,7 @@ const Home: React.FC = (): JSX.Element => {
 
 		if (json.data.status === "success") {
 			setSuccess(true);
-			alert("All done!");
+			setEmail("");
 		}
 	};
 
@@ -80,11 +80,12 @@ const Home: React.FC = (): JSX.Element => {
 					<label htmlFor="amount">Amount</label>
 					<input
 						type="number"
+						step="0.01"
 						min={0}
 						id="amount"
 						required
 						value={amount}
-						onChange={(e) => setAmount(Number.parseInt(e.target.value))}
+						onChange={(e) => setAmount(Number.parseFloat(e.target.value))}
 					/>
 				</div>
 				<div className="form-group">
