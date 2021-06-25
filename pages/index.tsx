@@ -13,10 +13,12 @@ type referenceObj = {
 
 export default function Home() {
 	const [ref, setRef] = useState("");
+	const [success, setSuccess] = useState(false);
 
 	useEffect(() => {
+		setSuccess(false);
 		setRef("" + Math.floor(Math.random() * 1000000000 + 1));
-	}, []);
+	}, [success]);
 
 	const config: PaystackProps = {
 		reference: ref,
@@ -32,8 +34,11 @@ export default function Home() {
 		// Implementation for whatever you want to do with reference and after success call.
 		const res = await fetch(`/api/verify/${reference.reference}`);
 		const json = await res.json();
-		console.log(json);
-		if (json.data.status === "success") alert("All done!");
+
+		if (json.data.status === "success") {
+			setSuccess(true);
+			alert("All done!");
+		}
 	};
 
 	// you can call this function anything
