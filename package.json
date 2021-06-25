@@ -1,23 +1,23 @@
 {
-  "name": "paystack",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "@types/node-fetch": "^2.5.10",
-    "next": "11.0.1",
-    "node-fetch": "^2.6.1",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-paystack": "^3.0.3"
-  },
-  "devDependencies": {
-    "@types/react": "17.0.11",
-    "sass": "^1.35.1",
-    "typescript": "4.3.4"
-  }
+	"name": "paystack",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start"
+	},
+	"dependencies": {
+		"next": "11.0.1",
+		"node-fetch": "^2.6.1",
+		"react": "17.0.2",
+		"react-dom": "17.0.2",
+		"react-paystack": "^3.0.3"
+	},
+	"devDependencies": {
+		"@types/node-fetch": "^2.5.10",
+		"@types/react": "17.0.11",
+		"sass": "^1.35.1",
+		"typescript": "4.3.4"
+	}
 }
