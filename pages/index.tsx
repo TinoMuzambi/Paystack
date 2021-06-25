@@ -51,7 +51,12 @@ export default function Home() {
 		const initializePayment = usePaystackPayment(config);
 		return (
 			<main>
-				<form id="paymentForm">
+				<form
+					id="paymentForm"
+					onSubmit={() => {
+						initializePayment(onSuccess, onClose);
+					}}
+				>
 					<div className="form-group">
 						<label htmlFor="email">Email Address</label>
 						<input type="email" id="email-address" required />
@@ -69,13 +74,7 @@ export default function Home() {
 						<input type="text" id="last-name" />
 					</div>
 					<div className="form-submit">
-						<button
-							onClick={() => {
-								initializePayment(onSuccess, onClose);
-							}}
-						>
-							Paystack Hooks Implementation
-						</button>
+						<button type="submit">Paystack Hooks Implementation</button>
 					</div>
 				</form>
 			</main>
