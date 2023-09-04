@@ -37,8 +37,8 @@ const Paystack: React.FC = (): JSX.Element => {
 
 	
 
-	const onSuccess = async () => {
-		const res = await fetch(`/api/verify/${ref}`);
+	const onSuccess = async (reference: referenceObj) => {
+		const res = await fetch(`/api/verify/${reference.reference}`);
 		const verifyData = await res.json();
 
 		if (verifyData.data.status === "success") {
