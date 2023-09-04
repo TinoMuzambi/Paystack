@@ -36,7 +36,7 @@ const Paystack: React.FC = (): JSX.Element => {
 	};
 	const initializePayment = usePaystackPayment(config);
 
-	const onSuccess: Function = async (reference: referenceObj) => {
+	const onSuccess:any = async (reference: referenceObj) => {
 		const res = await fetch(`/api/verify/${reference.reference}`);
 		const verifyData = await res.json();
 
@@ -49,7 +49,7 @@ const Paystack: React.FC = (): JSX.Element => {
 		}
 	};
 
-	const onClose: Function = () => {
+	const onClose = () => {
 		alert("Payment cancelled.");
 	};
 
