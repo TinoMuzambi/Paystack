@@ -1,5 +1,5 @@
 import { FormEventHandler, useEffect, useState } from "react";
-import { usePaystackPayment } from "react-paystack";
+import { PaystackButton } from "react-paystack";
 import { PaystackProps } from "react-paystack/dist/types";
 
 type referenceObj = {
@@ -34,7 +34,8 @@ const Paystack: React.FC = (): JSX.Element => {
 		publicKey: process.env.PAYSTACK_PUBLIC_TEST_KEY as string,
 		currency: "ZAR",
 	};
-	const initializePayment = usePaystackPayment(config);
+
+	
 
 	const onSuccess = async () => {
 		const res = await fetch(`/api/verify/${ref}`);
@@ -53,13 +54,17 @@ const Paystack: React.FC = (): JSX.Element => {
 		alert("Payment cancelled.");
 	};
 
-	const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-		e.preventDefault();
-		initializePayment(onSuccess, onClose);
-	};
+	const componentProps = {
+        ...config,
+        text: `Pay R${amount | 0}`,
+        onSuccess,
+        onClose
+    };
+
+
 
 	return (
-		<form id="paymentForm" onSubmit={handleSubmit}>
+		<div id="paymentForm" >
 			<div className="form-group">
 				<label htmlFor="email">Email Address</label>
 				<input
@@ -101,8 +106,8 @@ const Paystack: React.FC = (): JSX.Element => {
 				/>
 			</div>
 
-			<button type="submit">Pay R{amount | 0}</button>
-		</form>
+			<PaystackButton {...componentProps} />
+		</div>
 	);
 };
 
