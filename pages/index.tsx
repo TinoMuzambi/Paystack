@@ -8,12 +8,6 @@ const Home: React.FC = (): JSX.Element => {
     <>
       <Head>
         <title>Paystack Playground</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
       </Head>
       <div className="background-elements"></div>
       <main>
