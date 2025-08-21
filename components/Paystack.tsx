@@ -43,22 +43,36 @@ const Paystack: React.FC = (): JSX.Element => {
       .then((verifyData) => {
         if (verifyData.data.status === "success") {
           posthog.capture("successfulPayment", {
+            verifyData,
             email,
             name,
             surname,
             amount,
           });
-          console.log("successfulPayment");
           setSuccess(true);
           setEmail("");
           setAmount(0);
           setName("");
           setSurname("");
+        } else {
+          posthog.capture("failedPayment", {
+            verifyData,
+            email,
+            name,
+            surname,
+            amount,
+          });
         }
       });
   };
 
   const onClose = () => {
+    posthog.capture("cancelledPayment", {
+      email,
+      name,
+      surname,
+      amount,
+    });
     alert("Payment cancelled.");
   };
 
