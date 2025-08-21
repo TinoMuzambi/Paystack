@@ -22,6 +22,12 @@ const Paystack: React.FC = (): JSX.Element => {
 
   useEffect(() => {
     setSuccess(false);
+    posthog.capture("successfulPayment", {
+      email,
+      name,
+      surname,
+      amount,
+    });
     setRef("" + Math.floor(Math.random() * 1000000000 + 1));
   }, [success]);
 
@@ -42,13 +48,7 @@ const Paystack: React.FC = (): JSX.Element => {
 
     if (verifyData.data.status === "success") {
       setSuccess(true);
-      posthog.capture("successfulPayment", {
-        reference,
-        email,
-        name,
-        surname,
-        amount,
-      });
+
       setEmail("");
       setAmount(0);
       setName("");
