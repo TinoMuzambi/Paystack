@@ -6,7 +6,7 @@ import { PaystackProps } from "react-paystack/dist/types";
 type referenceObj = {
   message: string;
   reference: string;
-  status: "sucess" | "failure";
+  status: "success" | "failure";
   trans: string;
   transaction: string;
   trxref: string;
@@ -20,16 +20,23 @@ const Paystack: React.FC = (): JSX.Element => {
   const [surname, setSurname] = useState("");
   const [success, setSuccess] = useState(false);
 
+  // Initialize reference and reset success state on mount
   useEffect(() => {
     setSuccess(false);
-    posthog.capture("successfulPayment", {
-      email,
-      name,
-      surname,
-      amount,
-    });
     setRef("" + Math.floor(Math.random() * 1000000000 + 1));
-  }, [success]);
+  }, []);
+
+  useEffect(() => {
+    if (success) {
+      posthog.capture("successfulPayment", {
+        email,
+        name,
+        surname,
+        amount,
+      });
+    }
+    setRef("" + Math.floor(Math.random() * 1000000000 + 1));
+  }, [success, email, name, surname, amount]);
 
   const config: PaystackProps = {
     reference: ref,
@@ -42,17 +49,23 @@ const Paystack: React.FC = (): JSX.Element => {
     currency: "ZAR",
   };
 
-  const onSuccess = async (reference: referenceObj) => {
-    const res = await fetch(`/api/verify/${reference.reference}`);
-    const verifyData = await res.json();
+  const onSuccess = async (reference: any) => {
+    try {
+      // Handle both possible reference formats
+      const referenceId = reference.reference || reference.trxref || reference;
 
-    if (verifyData.data.status === "success") {
-      setSuccess(true);
+      const res = await fetch(`/api/verify/${referenceId}`);
+      const verifyData = await res.json();
 
-      setEmail("");
-      setAmount(0);
-      setName("");
-      setSurname("");
+      if (verifyData.data.status === "success") {
+        setSuccess(true);
+        setEmail("");
+        setAmount(0);
+        setName("");
+        setSurname("");
+      }
+    } catch (error) {
+      console.error("Error processing payment:", error);
     }
   };
 
@@ -63,9 +76,17 @@ const Paystack: React.FC = (): JSX.Element => {
   const componentProps = {
     ...config,
     text: `Pay R${amount | 0}`,
-    onSuccess,
-    onClose,
+    onSuccess: onSuccess,
+    onClose: onClose,
   };
+
+  // Validate required fields before rendering the button
+  const isFormValid =
+    email &&
+    amount > 0 &&
+    name &&
+    surname &&
+    process.env.PAYSTACK_PUBLIC_TEST_KEY;
 
   return (
     <div className="glass-card">
@@ -120,7 +141,24 @@ const Paystack: React.FC = (): JSX.Element => {
           />
         </div>
 
-        <PaystackButton {...componentProps} />
+        {isFormValid ? (
+          <PaystackButton {...componentProps} />
+        ) : (
+          <button
+            type="button"
+            disabled
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#ccc",
+              color: "#666",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "not-allowed",
+            }}
+          >
+            Please fill all fields to proceed
+          </button>
+        )}
       </div>
     </div>
   );
