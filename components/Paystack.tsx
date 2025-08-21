@@ -22,14 +22,6 @@ const Paystack: React.FC = (): JSX.Element => {
 
   // Initialize reference and reset success state on mount
   useEffect(() => {
-    if (success) {
-      posthog.capture("successfulPayment", {
-        email,
-        name,
-        surname,
-        amount,
-      });
-    }
     setSuccess(false);
     setRef("" + Math.floor(Math.random() * 1000000000 + 1));
   }, [success]);
@@ -45,17 +37,25 @@ const Paystack: React.FC = (): JSX.Element => {
     currency: "ZAR",
   };
 
-  const onSuccess = async (reference: referenceObj) => {
-    const res = await fetch(`/api/verify/${reference.reference}`);
-    const verifyData = await res.json();
-
-    if (verifyData.data.status === "success") {
-      setSuccess(true);
-      setEmail("");
-      setAmount(0);
-      setName("");
-      setSurname("");
-    }
+  const onSuccess = (reference: referenceObj) => {
+    fetch(`/api/verify/${reference.reference}`)
+      .then((res) => res.json())
+      .then((verifyData) => {
+        if (verifyData.data.status === "success") {
+          posthog.capture("successfulPayment", {
+            email,
+            name,
+            surname,
+            amount,
+          });
+          console.log("successfulPayment");
+          setSuccess(true);
+          setEmail("");
+          setAmount(0);
+          setName("");
+          setSurname("");
+        }
+      });
   };
 
   const onClose = () => {
@@ -65,8 +65,8 @@ const Paystack: React.FC = (): JSX.Element => {
   const componentProps = {
     ...config,
     text: `Pay R${amount | 0}`,
-    // onSuccess: onSuccess,
-    onClose: onClose,
+    onSuccess,
+    onClose,
   };
 
   // Validate required fields before rendering the button
