@@ -1,5 +1,5 @@
 import posthog from "posthog-js";
-import { FormEventHandler, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { PaystackButton } from "react-paystack";
 import { PaystackProps } from "react-paystack/dist/types";
 
