@@ -15,6 +15,7 @@ const Home: React.FC = (): JSX.Element => {
           crossOrigin="anonymous"
         />
       </Head>
+      <div className="background-elements"></div>
       <main>
         <Banner />
         <Paystack />

@@ -64,54 +64,65 @@ const Paystack: React.FC = (): JSX.Element => {
   const componentProps = {
     ...config,
     text: `Pay R${amount | 0}`,
-    // onSuccess,
+    onSuccess,
     onClose,
   };
 
   return (
-    <div id="paymentForm">
-      <div className="form-group">
-        <label htmlFor="email">Email Address</label>
-        <input
-          type="email"
-          id="email-address"
-          required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="amount">Amount</label>
-        <input
-          type="number"
-          step="0.01"
-          min={0}
-          id="amount"
-          required
-          value={amount}
-          onChange={(e) => setAmount(Number.parseFloat(e.target.value))}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="first-name">First Name</label>
-        <input
-          type="text"
-          id="first-name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="last-name">Last Name</label>
-        <input
-          type="text"
-          id="last-name"
-          value={surname}
-          onChange={(e) => setSurname(e.target.value)}
-        />
-      </div>
+    <div className="glass-card">
+      {success && (
+        <div className="success-message">
+          Payment successful! Thank you for your transaction.
+        </div>
+      )}
+      <div id="paymentForm">
+        <div className="form-group">
+          <label htmlFor="email">Email Address</label>
+          <input
+            type="email"
+            id="email-address"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your email"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="amount">Amount (R)</label>
+          <input
+            type="number"
+            step="0.01"
+            min={0}
+            id="amount"
+            required
+            value={amount}
+            onChange={(e) => setAmount(Number.parseFloat(e.target.value))}
+            placeholder="0.00"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="first-name">First Name</label>
+          <input
+            type="text"
+            id="first-name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter your first name"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="last-name">Last Name</label>
+          <input
+            type="text"
+            id="last-name"
+            value={surname}
+            onChange={(e) => setSurname(e.target.value)}
+            placeholder="Enter your last name"
+          />
+        </div>
 
-      <PaystackButton {...componentProps} />
+        <PaystackButton {...componentProps} />
+      </div>
     </div>
   );
 };
