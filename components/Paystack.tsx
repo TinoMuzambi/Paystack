@@ -1,12 +1,12 @@
 import posthog from "posthog-js";
-import { FormEventHandler, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { PaystackButton } from "react-paystack";
 import { PaystackProps } from "react-paystack/dist/types";
 
 type referenceObj = {
   message: string;
   reference: string;
-  status: "sucess" | "failure";
+  status: "success" | "failure";
   trans: string;
   transaction: string;
   trxref: string;
@@ -20,6 +20,7 @@ const Paystack: React.FC = (): JSX.Element => {
   const [surname, setSurname] = useState("");
   const [success, setSuccess] = useState(false);
 
+  // Initialize reference and reset success state on mount
   useEffect(() => {
     setSuccess(false);
     setRef("" + Math.floor(Math.random() * 1000000000 + 1));
@@ -36,28 +37,42 @@ const Paystack: React.FC = (): JSX.Element => {
     currency: "ZAR",
   };
 
-  const onSuccess = async (reference: referenceObj) => {
-    const res = await fetch(`/api/verify/${reference.reference}`);
-    const verifyData = await res.json();
-
-    if (verifyData.data.status === "success") {
-      setSuccess(true);
-      posthog.capture("successfulPayment", {
-        reference,
-        email,
-        name,
-        surname,
-        amount,
+  const onSuccess = (reference: referenceObj) => {
+    fetch(`/api/verify/${reference.reference}`)
+      .then((res) => res.json())
+      .then((verifyData) => {
+        if (verifyData.data.status === "success") {
+          posthog.capture("successfulPayment", {
+            verifyData,
+            email,
+            name,
+            surname,
+            amount,
+          });
+          setSuccess(true);
+          setEmail("");
+          setAmount(0);
+          setName("");
+          setSurname("");
+        } else {
+          posthog.capture("failedPayment", {
+            verifyData,
+            email,
+            name,
+            surname,
+            amount,
+          });
+        }
       });
-      setEmail("");
-      setAmount(0);
-      setName("");
-      setSurname("");
-    }
   };
 
   const onClose = () => {
-    posthog.capture("cancelledPayment", { email, name, surname, amount });
+    posthog.capture("cancelledPayment", {
+      email,
+      name,
+      surname,
+      amount,
+    });
     alert("Payment cancelled.");
   };
 
@@ -67,6 +82,14 @@ const Paystack: React.FC = (): JSX.Element => {
     onSuccess,
     onClose,
   };
+
+  // Validate required fields before rendering the button
+  const isFormValid =
+    email &&
+    amount > 0 &&
+    name &&
+    surname &&
+    process.env.PAYSTACK_PUBLIC_TEST_KEY;
 
   return (
     <div className="glass-card">
@@ -121,7 +144,24 @@ const Paystack: React.FC = (): JSX.Element => {
           />
         </div>
 
-        <PaystackButton {...componentProps} />
+        {isFormValid ? (
+          <PaystackButton {...componentProps} />
+        ) : (
+          <button
+            type="button"
+            disabled
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#ccc",
+              color: "#666",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "not-allowed",
+            }}
+          >
+            Please fill all fields to proceed
+          </button>
+        )}
       </div>
     </div>
   );
