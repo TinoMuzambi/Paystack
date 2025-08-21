@@ -1,3 +1,4 @@
+import posthog from "posthog-js";
 import { FormEventHandler, useEffect, useState } from "react";
 import { PaystackButton } from "react-paystack";
 import { PaystackProps } from "react-paystack/dist/types";
@@ -43,14 +44,16 @@ const Paystack: React.FC = (): JSX.Element => {
 
 		if (verifyData.data.status === "success") {
 			setSuccess(true);
+			posthog.capture('successful payment', { reference, email, name, surname, amount })
 			setEmail("");
 			setAmount(0);
 			setName("");
 			setSurname("");
 		}
 	};
-
+	
 	const onClose = () => {
+		posthog.capture('cancelled payment', { email, name, surname, amount })
 		alert("Payment cancelled.");
 	};
 
@@ -60,8 +63,6 @@ const Paystack: React.FC = (): JSX.Element => {
         // onSuccess,
         onClose
     };
-
-
 
 	return (
 		<div id="paymentForm" >
