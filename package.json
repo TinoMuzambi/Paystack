@@ -10,6 +10,8 @@
 	"dependencies": {
 		"next": "latest",
 		"node-fetch": "latest",
+		"posthog-js": "^1.260.2",
+		"posthog-node": "^5.7.0",
 		"react": "latest",
 		"react-dom": "latest",
 		"react-paystack": "latest"
