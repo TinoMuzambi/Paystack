@@ -57,7 +57,6 @@ const Paystack: React.FC = (): JSX.Element => {
   };
 
   const onClose = () => {
-    posthog.capture("cancelledPayment", { email, name, surname, amount });
     alert("Payment cancelled.");
   };
 
