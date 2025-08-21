@@ -22,11 +22,6 @@ const Paystack: React.FC = (): JSX.Element => {
 
   // Initialize reference and reset success state on mount
   useEffect(() => {
-    setSuccess(false);
-    setRef("" + Math.floor(Math.random() * 1000000000 + 1));
-  }, []);
-
-  useEffect(() => {
     if (success) {
       posthog.capture("successfulPayment", {
         email,
@@ -35,8 +30,9 @@ const Paystack: React.FC = (): JSX.Element => {
         amount,
       });
     }
+    setSuccess(false);
     setRef("" + Math.floor(Math.random() * 1000000000 + 1));
-  }, [success, email, name, surname, amount]);
+  }, [success]);
 
   const config: PaystackProps = {
     reference: ref,
@@ -49,23 +45,16 @@ const Paystack: React.FC = (): JSX.Element => {
     currency: "ZAR",
   };
 
-  const onSuccess = async (reference: any) => {
-    try {
-      // Handle both possible reference formats
-      const referenceId = reference.reference || reference.trxref || reference;
+  const onSuccess = async (reference: referenceObj) => {
+    const res = await fetch(`/api/verify/${reference.reference}`);
+    const verifyData = await res.json();
 
-      const res = await fetch(`/api/verify/${referenceId}`);
-      const verifyData = await res.json();
-
-      if (verifyData.data.status === "success") {
-        setSuccess(true);
-        setEmail("");
-        setAmount(0);
-        setName("");
-        setSurname("");
-      }
-    } catch (error) {
-      console.error("Error processing payment:", error);
+    if (verifyData.data.status === "success") {
+      setSuccess(true);
+      setEmail("");
+      setAmount(0);
+      setName("");
+      setSurname("");
     }
   };
 
@@ -76,7 +65,7 @@ const Paystack: React.FC = (): JSX.Element => {
   const componentProps = {
     ...config,
     text: `Pay R${amount | 0}`,
-    onSuccess: onSuccess,
+    // onSuccess: onSuccess,
     onClose: onClose,
   };
 
