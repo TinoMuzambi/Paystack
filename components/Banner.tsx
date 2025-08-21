@@ -1,3 +1,5 @@
+import posthog from "posthog-js";
+
 const Banner: React.FC = () => {
   return (
     <div className="tinotech-banner">
@@ -6,6 +8,9 @@ const Banner: React.FC = () => {
         target="_blank"
         rel="noopener noreferrer"
         className="banner-link"
+        onClick={() => {
+          posthog.capture("bannerClicked");
+        }}
       >
         <div className="banner-content">
           <span className="powered-by">powered by</span>
