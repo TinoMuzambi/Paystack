@@ -33,7 +33,7 @@ const Paystack: React.FC = (): JSX.Element => {
     lastname: surname,
     label: name + " " + surname,
     amount: (amount * 100) | 0,
-    publicKey: process.env.PAYSTACK_PUBLIC_TEST_KEY as string,
+    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_TEST_KEY as string,
     currency: "ZAR",
   };
 
@@ -89,7 +89,7 @@ const Paystack: React.FC = (): JSX.Element => {
     amount > 0 &&
     name &&
     surname &&
-    process.env.PAYSTACK_PUBLIC_TEST_KEY;
+    process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_TEST_KEY;
 
   return (
     <div className="glass-card">
