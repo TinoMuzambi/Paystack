@@ -23,7 +23,7 @@ const Paystack: React.FC = (): JSX.Element => {
   // Initialize reference and reset success state on mount
   useEffect(() => {
     setSuccess(false);
-    setRef("" + Math.floor(Math.random() * 1000000000 + 1));
+    setRef(window.crypto.randomUUID());
   }, [success]);
 
   const config: PaystackProps = {
@@ -32,8 +32,8 @@ const Paystack: React.FC = (): JSX.Element => {
     firstname: name,
     lastname: surname,
     label: name + " " + surname,
-    amount: (amount * 100) | 0,
-    publicKey: process.env.PAYSTACK_PUBLIC_TEST_KEY as string,
+    amount: Math.round(amount * 100),
+    publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_TEST_KEY as string,
     currency: "ZAR",
   };
 
@@ -41,13 +41,10 @@ const Paystack: React.FC = (): JSX.Element => {
     fetch(`/api/verify/${reference.reference}`)
       .then((res) => res.json())
       .then((verifyData) => {
-        if (verifyData.data.status === "success") {
+        if (verifyData.success && verifyData.data?.status === "success") {
           posthog.capture("successfulPayment", {
-            verifyData,
-            email,
-            name,
-            surname,
-            amount,
+            amount: verifyData.data.amount,
+            currency: verifyData.data.currency,
           });
           setSuccess(true);
           setEmail("");
@@ -56,10 +53,6 @@ const Paystack: React.FC = (): JSX.Element => {
           setSurname("");
         } else {
           posthog.capture("failedPayment", {
-            verifyData,
-            email,
-            name,
-            surname,
             amount,
           });
         }
@@ -68,9 +61,6 @@ const Paystack: React.FC = (): JSX.Element => {
 
   const onClose = () => {
     posthog.capture("cancelledPayment", {
-      email,
-      name,
-      surname,
       amount,
     });
     alert("Payment cancelled.");
@@ -89,7 +79,7 @@ const Paystack: React.FC = (): JSX.Element => {
     amount > 0 &&
     name &&
     surname &&
-    process.env.PAYSTACK_PUBLIC_TEST_KEY;
+    process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_TEST_KEY;
 
   return (
     <div className="glass-card">
@@ -100,7 +90,7 @@ const Paystack: React.FC = (): JSX.Element => {
       )}
       <div id="paymentForm">
         <div className="form-group">
-          <label htmlFor="email">Email Address</label>
+          <label htmlFor="email-address">Email Address</label>
           <input
             type="email"
             id="email-address"
@@ -116,6 +106,7 @@ const Paystack: React.FC = (): JSX.Element => {
             type="number"
             step="0.01"
             min={0}
+            max={1000000}
             id="amount"
             required
             value={amount}

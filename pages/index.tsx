@@ -1,7 +1,11 @@
 import Head from "next/head";
+import dynamic from "next/dynamic";
 
-import Paystack from "../components/Paystack";
 import Banner from "../components/Banner";
+
+const Paystack = dynamic(() => import("../components/Paystack"), {
+  ssr: false,
+});
 
 const Home: React.FC = (): JSX.Element => {
   return (
