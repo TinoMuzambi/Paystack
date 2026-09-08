@@ -2,11 +2,16 @@
 	"name": "paystack",
 	"version": "1.0.0",
 	"private": true,
-	"scripts": {
-		"dev": "next dev",
-		"build": "next build",
-		"start": "next start"
-	},
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "type-check": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "packageManager": "yarn@1.22.22",
 	"dependencies": {
 		"next": "15.5.25",
 		"posthog-js": "1.428.3",
