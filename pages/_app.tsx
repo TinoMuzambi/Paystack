@@ -7,7 +7,10 @@ import { PostHogProvider } from "posthog-js/react";
 
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
-    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+    const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
+    if (!posthogKey) return;
+
+    posthog.init(posthogKey, {
       api_host: "https://paystack-blue.vercel.app/ingest",
       defaults: "2025-05-24",
       // Enable debug mode in development
@@ -19,7 +22,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <PostHogProvider client={posthog}>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </PostHogProvider>
   );
 }

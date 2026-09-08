@@ -4,7 +4,12 @@ import { PostHog } from "posthog-node";
 
 type Data = {
   success: boolean;
-  data?: Object;
+  data?: {
+    amount: number;
+    currency: string;
+    reference: string;
+    status: string;
+  };
 };
 
 export default async (req: NextApiRequest, resp: NextApiResponse<Data>) => {
@@ -17,12 +22,19 @@ export default async (req: NextApiRequest, resp: NextApiResponse<Data>) => {
     ? req.query.reference[0]
     : req.query.reference;
   const secretKey = process.env.PAYSTACK_SECRET_TEST_KEY;
-  if (!reference || !/^[A-Za-z0-9._-]+$/.test(reference)) {
+  if (
+    !reference ||
+    !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      reference
+    )
+  ) {
     return resp.status(400).json({ success: false });
   }
   if (!secretKey) {
     return resp.status(503).json({ success: false });
   }
+
+  resp.setHeader("Cache-Control", "no-store");
 
   const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
   const posthog = posthogKey
@@ -43,32 +55,46 @@ export default async (req: NextApiRequest, resp: NextApiResponse<Data>) => {
         },
       }
     );
-    const data: any = await res.json();
+    const payload: any = await res.json();
+    if (!res.ok || payload?.status !== true || !payload?.data) {
+      console.error("Paystack verification failed", res.status);
+      return resp.status(502).json({ success: false });
+    }
 
-    // Track successful verification event
+    const data = {
+      amount: Number(payload.data.amount) || 0,
+      currency: String(payload.data.currency || ""),
+      reference: String(payload.data.reference || reference),
+      status: String(payload.data.status || "failed"),
+    };
+
+    // Never send customer details or the full provider response to analytics.
     posthog?.capture({
       distinctId: reference as string,
       event: "payment_verified",
       properties: {
         reference,
-        status: data.data.status,
-        amount: data.data.amount,
+        status: data.status,
+        amount: data.amount,
+        currency: data.currency,
       },
     });
 
-    resp.status(200).json({ success: true, data: data.data });
-  } catch (error) {
+    return resp.status(200).json({
+      success: data.status === "success",
+      data,
+    });
+  } catch {
     // Track failed verification event
     posthog?.capture({
       distinctId: typeof reference === "string" ? reference : "",
       event: "payment_verification_failed",
       properties: {
         reference,
-        error: error instanceof Error ? error.message : String(error),
       },
     });
 
-    resp.status(400).json({ success: false });
+    return resp.status(502).json({ success: false });
   } finally {
     // Ensure PostHog client is properly shut down
     await posthog?.shutdown();
