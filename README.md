@@ -16,5 +16,7 @@ the browser or forwarded to analytics.
 ## Verification
 
 ```bash
+yarn type-check
 yarn build
+yarn audit --groups dependencies --level high
 ```
