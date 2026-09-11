@@ -19,12 +19,13 @@ const Paystack: React.FC = (): JSX.Element => {
   const [name, setName] = useState("");
   const [surname, setSurname] = useState("");
   const [success, setSuccess] = useState(false);
+  const [message, setMessage] = useState("");
 
   // Initialize reference and reset success state on mount
   useEffect(() => {
     setSuccess(false);
     setRef(window.crypto.randomUUID());
-  }, [success]);
+  }, []);
 
   const config: PaystackProps = {
     reference: ref,
@@ -38,6 +39,7 @@ const Paystack: React.FC = (): JSX.Element => {
   };
 
   const onSuccess = (reference: referenceObj) => {
+    setMessage("");
     fetch(`/api/verify/${reference.reference}`)
       .then((res) => res.json())
       .then((verifyData) => {
@@ -47,28 +49,31 @@ const Paystack: React.FC = (): JSX.Element => {
             currency: verifyData.data.currency,
           });
           setSuccess(true);
+          setRef(window.crypto.randomUUID());
           setEmail("");
           setAmount(0);
           setName("");
           setSurname("");
         } else {
+          setMessage("The test payment could not be verified. Please try again.");
           posthog.capture("failedPayment", {
             amount,
           });
         }
-      });
+      })
+      .catch(() => setMessage("Verification is temporarily unavailable. Please try again."));
   };
 
   const onClose = () => {
     posthog.capture("cancelledPayment", {
       amount,
     });
-    alert("Payment cancelled.");
+    setMessage("Test checkout cancelled.");
   };
 
   const componentProps = {
     ...config,
-    text: `Pay R${amount | 0}`,
+    text: `Test pay R${Number.isFinite(amount) ? amount.toFixed(2) : "0.00"}`,
     onSuccess,
     onClose,
   };
@@ -76,16 +81,22 @@ const Paystack: React.FC = (): JSX.Element => {
   // Validate required fields before rendering the button
   const isFormValid =
     email &&
+    Number.isFinite(amount) &&
     amount > 0 &&
+    amount <= 1000000 &&
     name &&
     surname &&
-    process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_TEST_KEY;
+    process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_TEST_KEY?.startsWith("pk_test_");
 
   return (
     <div className="glass-card">
+      <h1>Try a Paystack checkout</h1>
+      <p>This is a test checkout demonstration. It does not sell a product or accept live payments.</p>
+      <p><a href="https://tinotech.co.za/services">Need checkout on your website? View tinotech services.</a></p>
+      {message && <p role="status">{message}</p>}
       {success && (
         <div className="success-message">
-          Payment successful! Thank you for your transaction.
+          Test payment verified. No product was purchased.
         </div>
       )}
       <div id="paymentForm">

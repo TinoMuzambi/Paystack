@@ -1,6 +1,11 @@
 # Paystack
 
-Paystack functionality demo in Next.js with TypeScript.
+Paystack checkout demonstration in Next.js with TypeScript, with a service enquiry
+link to https://tinotech.co.za/services. This is a lead-generation demo, not a
+standalone paid product. Live keys are rejected in the UI and verification API.
+The visitor can enter any test amount; never use this demo to fulfil paid orders.
+Product checkouts need server-created orders and exact product/amount/buyer binding,
+as implemented in `tinotech-co-za/Money` (ChaseKit).
 
 ## Environment
 
