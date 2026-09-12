@@ -30,7 +30,7 @@ export default async (req: NextApiRequest, resp: NextApiResponse<Data>) => {
   ) {
     return resp.status(400).json({ success: false });
   }
-  if (!secretKey) {
+  if (!secretKey?.startsWith("sk_test_")) {
     return resp.status(503).json({ success: false });
   }
 
@@ -50,13 +50,15 @@ export default async (req: NextApiRequest, resp: NextApiResponse<Data>) => {
       `https://api.paystack.co/transaction/verify/${reference}`,
       {
         method: "GET",
+        signal: AbortSignal.timeout(10000),
+        cache: "no-store",
         headers: {
           Authorization: `Bearer ${secretKey}`,
         },
       }
     );
     const payload: any = await res.json();
-    if (!res.ok || payload?.status !== true || !payload?.data) {
+    if (!res.ok || payload?.status !== true || !payload?.data || payload.data.reference !== reference || payload.data.domain !== "test" || payload.data.currency !== "ZAR") {
       console.error("Paystack verification failed", res.status);
       return resp.status(502).json({ success: false });
     }
@@ -97,6 +99,6 @@ export default async (req: NextApiRequest, resp: NextApiResponse<Data>) => {
     return resp.status(502).json({ success: false });
   } finally {
     // Ensure PostHog client is properly shut down
-    await posthog?.shutdown();
+    try { await posthog?.shutdown(); } catch { /* Analytics must not change the verification result. */ }
   }
 };

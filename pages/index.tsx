@@ -11,7 +11,8 @@ const Home: React.FC = (): JSX.Element => {
   return (
     <>
       <Head>
-        <title>Paystack Playground</title>
+        <title>Paystack checkout demo | tinotech</title>
+        <meta name="description" content="Try a safe Paystack test checkout, then ask tinotech to integrate payments on your business website." />
       </Head>
       <div className="background-elements"></div>
       <main>
